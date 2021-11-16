@@ -7,7 +7,7 @@ namespace hosted_wasm.Client.ExternalApi
 {
 	public interface IWeatherApi
 	{
-		[Get("WeatherForecast")]
+		[Get("/WeatherForecast")]
 		Task<List<WeatherForecast>> GetWeatherForecastsAsync();
 	}
 }

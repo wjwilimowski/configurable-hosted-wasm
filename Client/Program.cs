@@ -25,8 +25,13 @@ namespace hosted_wasm.Client
             var bootstrapClient = new HttpClient { BaseAddress = new Uri(builder.HostEnvironment.BaseAddress) };
             HttpResponseMessage configResponse = await bootstrapClient.GetAsync("/Configuration");
             string responseContent = await configResponse.Content.ReadAsStringAsync();
-            var frontendConfiguration = JsonSerializer.Deserialize<FrontendConfiguration>(responseContent);
+            var frontendConfiguration = JsonSerializer.Deserialize<FrontendConfiguration>(responseContent, new JsonSerializerOptions
+            {
+                PropertyNameCaseInsensitive = true
+            });
 
+            Console.WriteLine(frontendConfiguration.ExternalApiUrl);
+            
             builder.Services.AddRefitClient<IWeatherApi>()
                 .ConfigureHttpClient(c => c.BaseAddress = new Uri(frontendConfiguration!.ExternalApiUrl));
 

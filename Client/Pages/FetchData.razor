@@ -1,12 +1,13 @@
 ﻿@page "/fetchdata"
 @using hosted_wasm.Shared
-@inject HttpClient Http
+@using hosted_wasm.Client.ExternalApi
+@inject IWeatherApi _weatherApi
 
 <h1>Weather forecast</h1>
 
 <p>This component demonstrates fetching data from the server.</p>
 
-@if (forecasts == null)
+@if (_forecasts == null)
 {
     <p><em>Loading...</em></p>
 }
@@ -22,7 +23,7 @@ else
             </tr>
         </thead>
         <tbody>
-            @foreach (var forecast in forecasts)
+            @foreach (WeatherForecast forecast in _forecasts)
             {
                 <tr>
                     <td>@forecast.Date.ToShortDateString()</td>
@@ -36,11 +37,11 @@ else
 }
 
 @code {
-    private WeatherForecast[] forecasts;
+    private IReadOnlyList<WeatherForecast> _forecasts;
 
     protected override async Task OnInitializedAsync()
     {
-        forecasts = await Http.GetFromJsonAsync<WeatherForecast[]>("WeatherForecast");
+        _forecasts = await _weatherApi.GetWeatherForecastsAsync();
     }
 
 }

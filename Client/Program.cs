@@ -1,17 +1,10 @@
 using System;
 using System.Net.Http;
-using System.Collections.Generic;
 using System.Threading.Tasks;
-using System.Text;
 using System.Text.Json;
-using System.Text.Json.Serialization;
-using hosted_wasm.Client.ExternalApi;
 using hosted_wasm.Shared;
 using Microsoft.AspNetCore.Components.WebAssembly.Hosting;
-using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
-using Microsoft.Extensions.Logging;
-using Refit;
 
 namespace hosted_wasm.Client
 {
@@ -31,9 +24,8 @@ namespace hosted_wasm.Client
             });
 
             Console.WriteLine(frontendConfiguration.ExternalApiUrl);
-            
-            builder.Services.AddRefitClient<IWeatherApi>()
-                .ConfigureHttpClient(c => c.BaseAddress = new Uri(frontendConfiguration!.ExternalApiUrl));
+
+            builder.Services.AddScoped(sp => new HttpClient { BaseAddress = new Uri(frontendConfiguration.ExternalApiUrl) });
 
             await builder.Build().RunAsync();
         }
